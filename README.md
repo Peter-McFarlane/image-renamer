@@ -42,4 +42,4 @@ Be sure to do a cursory check to see that the Exif data makes sense, particularl
 
 On Mac, open the JPEG image in Preview and press cmd+I. Then, navigate to the “More Info” tab and select “Exif”.
 
-On Windows, right-ckick the desired JPEG. Then, select “Properties”. Then, select the “Details” tab.
+On Windows, right-click the desired JPEG. Then, select “Properties”. Then, select the “Details” tab.
