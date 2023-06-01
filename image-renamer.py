@@ -1,6 +1,4 @@
 import os
-import stat
-import pathlib
 import webbrowser
 import tkinter as tk
 from exif import Image

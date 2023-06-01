@@ -6,7 +6,7 @@ This tool renames media files to the date and time at which they were created.
 
 ![before and after](./images/before_and_after.png)
 
-If the image is a JPEG, it gets the timestamp from its Exif data. For PNGs, video files, and audio files, it gets the timestamp from either its created date or its last modified date (whichever is earliest).
+If the image is a JPEG, it gets the timestamp from its Exif data. For other image files and video files, it gets the timestamp from either its created date or its last modified date (whichever is earliest).
 
 This is a handy tool for properly sorting images chronologically, especially if you’re dealing with images from a DSLR that uses unhelpful file naming conventions like “IMG_0037.JPG” (multiple images can have the same name if they’re taken from different SD cards, making it obnoxious to merge all of these images into the same file).
 
