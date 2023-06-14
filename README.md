@@ -8,7 +8,7 @@ This tool renames media files to the date and time at which they were created.
 
 If the image is a JPEG, it gets the timestamp from its Exif data. For other image files and video files, it gets the timestamp from either its created date or its last modified date (whichever is earliest).
 
-This is a handy tool for properly sorting images chronologically, especially if you’re dealing with images from a DSLR that uses unhelpful file naming conventions like “IMG_0037.JPG” (multiple images can have the same name if they’re taken from different SD cards, making it obnoxious to merge all of these images into the same file).
+This is a handy tool for properly sorting images chronologically, especially if you’re dealing with images from a DSLR that uses unhelpful file naming conventions like “IMG_0037.JPG” (multiple images can have the same name if they’re taken from different SD cards, making it obnoxious to merge all of these images into the same folder).
 
 This tool is also an effective way to chronologically organize photos from different sources. I originally developed this tool to organize family photos from numerous old hard drives spanning over a decade.
 
@@ -26,7 +26,7 @@ For non-JPEG files, be sure to check that the created and/or modified times seem
 
 ## Sometimes Exif data is wrong
 
-This is an photo of me swimming in a lake in broad daylight taken sometime in the summer of 2007:
+This is a photo of me swimming in a lake in broad daylight taken sometime in the summer of 2007:
 
 ![lake](./images/lake.jpg)
 
@@ -43,3 +43,9 @@ Be sure to do a cursory check to see that the Exif data makes sense, particularl
 On Mac, open the JPEG image in Preview and press cmd+I. Then, navigate to the “More Info” tab and select “Exif”.
 
 On Windows, right-click the desired JPEG. Then, select “Properties”. Then, select the “Details” tab.
+
+## Got burst photos? Worry not
+
+Images taken in rapid succession may have the same timestamp. This tool accounts for these photos by appending an index at the end so that no photo gets overwritten.
+
+![burst photos](./images/burst.png)
