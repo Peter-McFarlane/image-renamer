@@ -37,18 +37,6 @@ def get_path():
 def unix_to_datetime(unix):
     return datetime.utcfromtimestamp(unix).strftime("%Y-%m-%d [%H∶%M∶%S]")
 
-# rename files that do not have exif data according to created/modified time
-def rename_non_jpeg(path):
-    created = path.stat().st_ctime
-    modified = path.stat().st_mtime
-
-    if created <= modified:
-        date_and_time = unix_to_datetime(created)
-    else:
-        date_and_time = unix_to_datetime(modified)
-
-    return date_and_time
-
 # rename the files
 def run(root_dir):
     button.config(state="disabled")
@@ -61,6 +49,7 @@ def run(root_dir):
     image_list = Path(root_dir).glob('*')
     image_list = natsorted(image_list, key=str)
 
+    # cycle through all files
     for path in image_list:
         file_name, file_extension = os.path.splitext(path)
 
@@ -78,17 +67,24 @@ def run(root_dir):
             root.update()
 
             # rename non-jpeg file
-            date_and_time = rename_non_jpeg(path)
+            created = path.stat().st_ctime
+            modified = path.stat().st_mtime
+
+            if created <= modified:
+                date_and_time = unix_to_datetime(created)
+            else:
+                date_and_time = unix_to_datetime(modified)
+
             new_filename = date_and_time + file_extension
             new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
             os.rename(path, new_filename)
         
         # rename jpeg images
         elif file_extension.lower() in jpeg_extns:
-
-            # modify date and time format to my liking
-            # YYYY-mm-DD [HH∶MM∶SS]
             img = Image(path)
+
+            # if exif data is good, modify date and time format to my liking
+            # YYYY-mm-DD [HH∶MM∶SS]
             if img.has_exif and img.get("datetime_original") != "0000:00:00 00:00:00":
 
                 # update counter and status
@@ -100,16 +96,17 @@ def run(root_dir):
                 date_list = list(img.get("datetime_original"))
                 date_list[4] = '-'
                 date_list[7] = '-'
-                date_list[13] = "∶" # NOTE: this is not a colon, as they are not allowed to be used in
-                date_list[16] = "∶" # filenames on Mac. Rather, this is a ratio symbol (U+2236)
+                date_list[13] = "∶" # NOTE: this is not a colon, as they are not allowed to be used
+                date_list[16] = "∶" # in filenames on Mac. Rather, this is a ratio symbol (U+2236)
                 temp1 = date_list[0:11]
                 temp1.append("[")
                 temp2 = date_list[11:19]
                 temp2.append("]")
                 date_list = temp1 + temp2
                 date_and_time = "".join(date_list)
-            else:
-                # skip if there's no/bad exif data and update counter and status
+            
+            # skip if there's no/bad exif data and update counter and status
+            else: 
                 num_skipped += 1
                 status_label.config(text="Skipping: " + str(file_name), fg="purple")
                 root.update()
@@ -118,21 +115,18 @@ def run(root_dir):
             # if two or more images have the exact same timestamp, we need to append
             # the burst index to the end so that photos don't get overwritten
             if date_and_time[0:20] == last[0:20]:
-                burst_i = burst_i + 1
+                burst_i += 1
                 new_filename = date_and_time + "~" + str(burst_i) + file_extension
-                new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
-                os.rename(path, new_filename)
             else:
                 new_filename = date_and_time + file_extension
-                new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
-                os.rename(path, new_filename)
                 last = date_and_time # keep track of the last date/time
                 burst_i = 0 # reset the burst index
-        
-        # ignore all other file extensions
-        else:
-            continue
 
+            # rename the file
+            new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
+            os.rename(path, new_filename)
+
+    # when finished, update the GUI
     status_label.config(text="Done!", fg="green")
     num_renamed_label.config(text="Renamed " + str(num_renamed) + " files", fg="purple")
     num_skipped_label.config(text="Skipped " + str(num_skipped) + " files", fg="purple")
