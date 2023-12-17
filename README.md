@@ -14,9 +14,11 @@ This tool is also an effective way to chronologically organize photos from diffe
 
 ## What’s the deal with all these dates?
 
-The created date refers to the date the file was created on the file system on which it is currently located. The modified date refers to the date the file was last written to on the system. These timestamps are sometimes, but not necessarily the time at which the file was initially created. For example, this image of me taken on Christmas morning of 2006 does not show the correct timestamps here:
+The *created date* refers to the date the file was created on the file system on which it is currently located. The *modified date* refers to the date the file was last written to on the system. These timestamps are sometimes, but not necessarily, the time at which the file was initially created. For example, this image of me taken on Christmas morning of 2006 does not show the correct timestamps here:
 
 ![xmas](./images/xmas.png)
+
+Confusingly, the created date can sometimes be *after* the modified date.
 
 For this reason, this tool works best with JPEGs, since JPEGs contain the date and time the photo was originally taken embedded in its Exif data. When we take a look at the Exif data for the above image, we can see the correct date and time:
 
@@ -34,18 +36,18 @@ However, the Exif data shows that the photo was taken shortly after midnight on 
 
 ![wrong exif](./images/wrong_exif.png)
 
-This is because the date and time was not properly set on the camera this picture was taken on, probably because whoever set up the camera simply breezed through the setup process and kept the date set to its default value of January 1st, 2007 at 12:00:00.
+This is because the date and time was not properly set on the camera this picture was taken on, probably because whoever set up the camera (looking at you, Dad) simply breezed through the setup process and kept the date set to its default value of January 1st, 2007 at 12:00:00.
 
-Be sure to do a cursory check to see that the Exif data makes sense, particularly if you’re trying to organize older photos where the date and time may not have been properly configured.
+Be sure to do a cursory check on a batch of photos to see that the Exif data makes sense, particularly if you’re trying to organize older photos taken on digital cameras where the date and time may not have been properly configured. Photos taken on a modern smartphone should not have this issue.
 
 ## How to check the Exif data
 
-On Mac, open the JPEG image in Preview and press cmd+I. Then, navigate to the “More Info” tab and select “Exif”.
+On Mac, open the JPEG image in Preview and press `cmd+I`. Then, navigate to the “More Info” tab and select “Exif”.
 
 On Windows, right-click the desired JPEG. Then, select “Properties”. Then, select the “Details” tab.
 
 ## Got burst photos? Worry not
 
-Images taken in rapid succession may have the same timestamp. This tool accounts for these photos by appending an index at the end so that no photo gets overwritten.
+Images taken in rapid succession may have the exact same timestamp, down to the second. This tool accounts for these photos by appending an index at the end so that no photo gets overwritten.
 
 ![burst photos](./images/burst.png)
