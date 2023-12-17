@@ -61,7 +61,9 @@ def run(root_dir):
     image_list = Path(root_dir).glob('*')
     image_list = natsorted(image_list, key=str)
 
+    # main loop; runs through list of images
     for path in image_list:
+
         file_name, file_extension = os.path.splitext(path)
 
         # supported file extensions
@@ -86,10 +88,11 @@ def run(root_dir):
         # rename jpeg images
         elif file_extension.lower() in jpeg_extns:
 
+            img = Image(path)
+
             # modify date and time format to my liking
             # YYYY-mm-DD [HH∶MM∶SS]
-            img = Image(path)
-            if img.has_exif and img.get("datetime_original") != "0000:00:00 00:00:00":
+            if img.has_exif and img.get("datetime_original") != "0000:00:00 00:00:00" and img.get("datetime_orignal") != None:
 
                 # update counter and status
                 num_renamed += 1
@@ -108,30 +111,34 @@ def run(root_dir):
                 temp2.append("]")
                 date_list = temp1 + temp2
                 date_and_time = "".join(date_list)
+
+            # if there's no/bad exif data...
             else:
-                # skip if there's no/bad exif data and update counter and status
+
+                # ...just skip it and update counter and status
                 num_skipped += 1
                 status_label.config(text="Skipping: " + str(file_name), fg="purple")
                 root.update()
                 continue
 
-            # if two or more images have the exact same timestamp, we need to append
-            # the burst index to the end so that photos don't get overwritten
+            # if two or more images have the exact same timestamp...
             if date_and_time[0:20] == last[0:20]:
+
+                # ...create filename with burst index appended to the end
                 burst_i = burst_i + 1
                 new_filename = date_and_time + "~" + str(burst_i) + file_extension
-                new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
-                os.rename(path, new_filename)
+
+            # otherwise...
             else:
+
+                # ...create filename from formatted date and time and reset burst index
                 new_filename = date_and_time + file_extension
-                new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
-                os.rename(path, new_filename)
-                last = date_and_time # keep track of the last date/time
-                burst_i = 0 # reset the burst index
-        
-        # ignore all other file extensions
-        else:
-            continue
+                last = date_and_time 
+                burst_i = 0 
+            
+            # rename the image with the new filename
+            new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
+            os.rename(path, new_filename)
 
     status_label.config(text="Done!", fg="green")
     num_renamed_label.config(text="Renamed " + str(num_renamed) + " files", fg="purple")
@@ -146,11 +153,11 @@ root.title("Image Renamer")
 root.geometry("700x500")
 
 # Readme label
-readme_label = tk.Label(root, text="❗️ Please read the README before running this program ❗️", font=("TkDefaultFont"))
+readme_label = tk.Label(root, text="Please read the README before running this program", font=("Tahoma"))
 readme_label.pack(pady=10)
 
 # Readme link
-readme_link = tk.Label(root, text="Click here to read the README.md", font=("TkDefaultFont"), fg="blue", cursor="hand2")
+readme_link = tk.Label(root, text="Click here to read the README.md", font=("Tahoma"), fg="blue", cursor="hand2")
 readme_link.pack(pady=10)
 readme_link.bind("<Button-1>", lambda e:
 callback("https://github.com/Peter-McFarlane/image-renamer/blob/main/README.md"))
@@ -160,7 +167,7 @@ separator = ttk.Separator(root, orient='horizontal')
 separator.pack(fill='x', pady=10)
 
 # Path label
-path_label = tk.Label(root, text="Enter path where images are located:", font=("TkDefaultFont"), anchor="w")
+path_label = tk.Label(root, text="Enter path where images are located:", font=("Tahoma"), anchor="w")
 path_label.pack(pady=10)
 
 # Path entry
@@ -169,20 +176,20 @@ entry.pack(pady=10)
 
 # Error label
 error = tk.StringVar()
-error_label = tk.Label(root, textvariable=error, font=("TkFixedFont"), fg="red")
+error_label = tk.Label(root, textvariable=error, font=("Courier"), fg="red")
 error_label.pack(pady=10)
 
 # Run button
-button = tk.Button(root, text="  Run it  ", font=("TkDefaultFont"), command=get_path, cursor="hand2")
+button = tk.Button(root, text="  Run it  ", font=("Tahoma"), command=get_path, cursor="hand2")
 button.pack(pady=10)
 
 # Status label
-status_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple")
+status_label = tk.Label(root, text=" ", font=("Courier"), fg="purple")
 status_label.pack(pady=10)
 
 # Results label
-num_renamed_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple", anchor="w")
-num_skipped_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple", anchor="w")
+num_renamed_label = tk.Label(root, text=" ", font=("Courier"), fg="purple", anchor="w")
+num_skipped_label = tk.Label(root, text=" ", font=("Courier"), fg="purple", anchor="w")
 num_renamed_label.pack(pady=5)
 num_skipped_label.pack(pady=5)
 
