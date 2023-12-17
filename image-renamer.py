@@ -37,18 +37,6 @@ def get_path():
 def unix_to_datetime(unix):
     return datetime.utcfromtimestamp(unix).strftime("%Y-%m-%d [%H∶%M∶%S]")
 
-# rename files that do not have exif data according to created/modified time
-def rename_non_jpeg(path):
-    created = path.stat().st_ctime
-    modified = path.stat().st_mtime
-
-    if created <= modified:
-        date_and_time = unix_to_datetime(created)
-    else:
-        date_and_time = unix_to_datetime(modified)
-
-    return date_and_time
-
 # rename the files
 def run(root_dir):
     button.config(state="disabled")
@@ -80,7 +68,14 @@ def run(root_dir):
             root.update()
 
             # rename non-jpeg file
-            date_and_time = rename_non_jpeg(path)
+            created = path.stat().st_ctime
+            modified = path.stat().st_mtime
+
+            if created <= modified:
+                date_and_time = unix_to_datetime(created)
+            else:
+                date_and_time = unix_to_datetime(modified)
+
             new_filename = date_and_time + file_extension
             new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
             os.rename(path, new_filename)
@@ -90,9 +85,9 @@ def run(root_dir):
 
             img = Image(path)
 
-            # modify date and time format to my liking
+            # if exif data is good, modify date and time format to my liking
             # YYYY-mm-DD [HH∶MM∶SS]
-            if img.has_exif and img.get("datetime_original") != "0000:00:00 00:00:00" and img.get("datetime_orignal") != None:
+            if img.has_exif and img.get("datetime_original") != "0000:00:00 00:00:00":
 
                 # update counter and status
                 num_renamed += 1
@@ -103,8 +98,8 @@ def run(root_dir):
                 date_list = list(img.get("datetime_original"))
                 date_list[4] = '-'
                 date_list[7] = '-'
-                date_list[13] = "∶" # NOTE: this is not a colon, as they are not allowed to be used in
-                date_list[16] = "∶" # filenames on Mac. Rather, this is a ratio symbol (U+2236)
+                date_list[13] = "∶" # NOTE: this is not a colon, as they are not allowed to be used
+                date_list[16] = "∶" # in filenames on Mac. Rather, this is a ratio symbol (U+2236)
                 temp1 = date_list[0:11]
                 temp1.append("[")
                 temp2 = date_list[11:19]
@@ -140,6 +135,11 @@ def run(root_dir):
             new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
             os.rename(path, new_filename)
 
+            # rename the file
+            new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
+            os.rename(path, new_filename)
+
+    # when finished, update the GUI
     status_label.config(text="Done!", fg="green")
     num_renamed_label.config(text="Renamed " + str(num_renamed) + " files", fg="purple")
     num_skipped_label.config(text="Skipped " + str(num_skipped) + " files", fg="purple")
