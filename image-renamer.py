@@ -135,10 +135,6 @@ def run(root_dir):
             new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
             os.rename(path, new_filename)
 
-            # rename the file
-            new_filename = os.path.join(os.path.dirname(root_dir), new_filename)
-            os.rename(path, new_filename)
-
     # when finished, update the GUI
     status_label.config(text="Done!", fg="green")
     num_renamed_label.config(text="Renamed " + str(num_renamed) + " files", fg="purple")
@@ -153,11 +149,11 @@ root.title("Image Renamer")
 root.geometry("700x500")
 
 # Readme label
-readme_label = tk.Label(root, text="Please read the README before running this program", font=("Tahoma"))
+readme_label = tk.Label(root, text="Please read the README before running this program", font=("TkDefaultFont"))
 readme_label.pack(pady=10)
 
 # Readme link
-readme_link = tk.Label(root, text="Click here to read the README.md", font=("Tahoma"), fg="blue", cursor="hand2")
+readme_link = tk.Label(root, text="Click here to read the README.md", font=("TkDefaultFont"), fg="blue", cursor="hand2")
 readme_link.pack(pady=10)
 readme_link.bind("<Button-1>", lambda e:
 callback("https://github.com/Peter-McFarlane/image-renamer/blob/main/README.md"))
@@ -167,7 +163,7 @@ separator = ttk.Separator(root, orient='horizontal')
 separator.pack(fill='x', pady=10)
 
 # Path label
-path_label = tk.Label(root, text="Enter path where images are located:", font=("Tahoma"), anchor="w")
+path_label = tk.Label(root, text="Enter path where images are located:", font=("TkDefaultFont"), anchor="w")
 path_label.pack(pady=10)
 
 # Path entry
@@ -176,20 +172,20 @@ entry.pack(pady=10)
 
 # Error label
 error = tk.StringVar()
-error_label = tk.Label(root, textvariable=error, font=("Courier"), fg="red")
+error_label = tk.Label(root, textvariable=error, font=("TkFixedFont"), fg="red")
 error_label.pack(pady=10)
 
 # Run button
-button = tk.Button(root, text="  Run it  ", font=("Tahoma"), command=get_path, cursor="hand2")
+button = tk.Button(root, text="  Run ", font=("TkDefaultFont"), command=get_path, cursor="hand2")
 button.pack(pady=10)
 
 # Status label
-status_label = tk.Label(root, text=" ", font=("Courier"), fg="purple")
+status_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple")
 status_label.pack(pady=10)
 
 # Results label
-num_renamed_label = tk.Label(root, text=" ", font=("Courier"), fg="purple", anchor="w")
-num_skipped_label = tk.Label(root, text=" ", font=("Courier"), fg="purple", anchor="w")
+num_renamed_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple", anchor="w")
+num_skipped_label = tk.Label(root, text=" ", font=("TkFixedFont"), fg="purple", anchor="w")
 num_renamed_label.pack(pady=5)
 num_skipped_label.pack(pady=5)
 
